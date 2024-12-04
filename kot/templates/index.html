@@ -11,8 +11,12 @@
     <div class="col-lg-6 mx-auto">
       <p class="lead mb-4">Zdobądź odznakę PTTK, zwiedzając obiekty krajoznawcze w Polsce.</p>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        <a href=""><button type="button" class="btn btn-success btn-lg px-4 gap-3">Mapa miejsc</button></a>
-        <a href=""><button type="button" class="btn btn-outline-secondary btn-lg px-4">Lista miejsc</button></a>
+        <a href="{% url 'map' %}">
+          <button type="button" class="btn btn-success btn-lg px-4 gap-3">Mapa miejsc</button>
+        </a>
+        <a href="">
+          <button type="button" class="btn btn-outline-secondary btn-lg px-4">Lista miejsc</button>
+        </a>
       </div>
     </div>
   </div>

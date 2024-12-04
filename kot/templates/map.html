@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load leaflet_tags %}
+
+{% block title %}Mapa obiektów turystycznych{% endblock %}
+
+{% block imports %}
+  <script src="{% static 'plugins/leaflet.ajax.min.js' %}"></script>
+{% endblock %}
+
+{% block style %}
+<style>
+  #map {
+    height: 75vh;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+  {% leaflet_map "map" callback="window.map_init" %}
+{% endblock %}
+
+{% block script %}
+<script>
+  function stylePoints () {
+    return {
+      radius: 6.0,
+      color: 'green',
+      weight: 3,
+      fillColor: 'white',
+      fillOpacity: 1.0
+      }
+    };
+
+  function onEachFeature (feature, layer) {
+    layer.bindPopup('<b>Obiekt: </b>' + feature.properties.name + '<br>' +
+      '<b>Miejscowość: </b>' + feature.properties.localization + '<br>' +
+      '<b>Województwo: </b>' + feature.properties.voivodeship + '<br>' +
+      '<a href="' + feature.properties.link1 +
+      '" target="_blank"><b>Link1</b></a>' + '<br>' +
+      '<a href="' + feature.properties.link2 +
+      '" target="_blank"><b>Link2</b></a>'
+    )
+  };
+
+  function map_init (map, options) {
+
+    var placesLayer = L.geoJson.ajax("{% url 'dataset-places' %}", {
+      onEachFeature: onEachFeature,
+      pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, stylePoints(feature))
+      } 
+    });
+
+    placesLayer.addTo(map);
+  };
+</script>
+{% endblock %}
