@@ -133,3 +133,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 GDAL_LIBRARY_PATH = os.path.join(BASE_DIR, r'venv\Lib\site-packages\osgeo\gdal304.dll')
 GEOS_LIBRARY_PATH = os.path.join(BASE_DIR, r'venv\Lib\site-packages\osgeo\geos_c.dll')
+
+LEAFLET_CONFIG  = {
+    'SPATIAL_EXTENT': (12.6205, 56.10350, 25.30176, 47.71657),
+    'DEFAULT_CENTER': (19.48020, 52.06934),
+    'DEFAULT_ZOOM': 6,
+    'MIN_ZOOM': 5,
+    'MAX_ZOOM': 18,
+    'SCALES': 'metric',
+    'TILES': [
+        ('OpenStreetMap',
+         'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+         {'attribution': '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>', 
+                'maxZoom': 20})
+    ]
+}
