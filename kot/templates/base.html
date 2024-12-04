@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  {% load leaflet_tags %}
+  {% load static %}
+  {% leaflet_js %}
+  {% leaflet_css %}
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock title %}</title>
+
+  <link rel="icon" type="image/x-icon" href="{% static 'img/kot.svg' %}">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  {% block imports %}{% endblock %}
+  {% block style %}{% endblock %}
+</head>
+<body>
+  <!-- <div class="container"> -->
+    <nav class="navbar navbar-expand-md navbar-light bg-light" aria-label="Fourth navbar example">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/"><img src="{% static 'img/kot.svg' %}" style="width: 50px;"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarsExample04">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="">Mapa</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="">Lista obiektów</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="">Informacje</a>
+          </li>
+        </ul>
+        </div>
+      </div>
+      </nav>
+  <!-- </div> -->
+
+  {% block content %}{% endblock %}
+
+  <!-- <div class="container"> -->
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+      <div class="col-md-4 ms-5 d-flex align-items-center">
+        <a href="https://marylagis.github.io/" target="_blank" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
+          <i class="bi bi-globe2"></i>
+        </a>
+        <span class="mb-3 mb-md-0 text-body-secondary">2024 maryla4GIS</span>
+      </div>
+      <ul class="nav col-md-4 me-5 justify-content-end list-unstyled d-flex">
+        <li class="ms-3"><a class="text-body-secondary" href="https://github.com/marylaGIS" target="_blank"><i class="bi bi-github"></i></a></li>
+        <li class="ms-3"><a class="text-body-secondary" href="https://www.linkedin.com/in/marylajez/" target="_blank"><i class="bi bi-linkedin"></i></a></li>
+        <li class="ms-3"><a class="text-body-secondary" href="https://www.youtube.com/@maryla4GIS" target="_blank"><i class="bi bi-youtube"></i></a></li>
+      </ul>
+    </footer>
+  <!-- </div> -->
+
+  {% block script %}
+  {% endblock %}
+
+</body>
+</html>
