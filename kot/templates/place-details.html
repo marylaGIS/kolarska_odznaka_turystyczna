@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load leaflet_tags %}
+
+{% block title %}Szczegóły obiektu{% endblock %}
+
+{% block imports %}
+  <script src="{% static 'plugins/leaflet.ajax.min.js' %}"></script>
+{% endblock %}
+
+{% block style %}
+<style>
+#map {
+    height: 65vh;
+  }
+</style>  
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3 class="fw-bold text-body-emphasis">
+      Szczegóły obiektu
+    </h3>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <p><b>Nazwa:</b> {{ place.name }}</p>
+      <p><b>Województwo:</b> {{ place.voivodeship }}</p>
+      <p><b>Miejscowość:</b> {{ place.localization }}</p>
+      <p><b>Link 1:</b>
+        <a href="{{ place.link1 }}" target="_blank">
+          {{ place.link1 }}
+        </a>
+      </p>
+      <p><b>Link 2:</b>
+        <a href="{{ place.link2 }}" target="_blank">
+          {{ place.link2 }}
+        </a>
+      </p>
+    </div>
+    <div class="col">
+      {% leaflet_map "map" callback="window.map_init" %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+  function stylePoints () {
+    return {
+      radius: 6,
+      color: 'green',
+      weight: 3,
+      fillColor: 'white',
+      fillOpacity: 1
+    }
+  }
+
+  function map_init (map, options) {
+    var placeLayer = L.geoJson.ajax("{% url 'dataset-places' %}", {
+      filter: function (feature) {
+        if (feature.id == {{ place.id }})
+        return true
+      },
+      pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, stylePoints(feature))
+      },
+      onEachFeature: function (feature, layer) {
+        var latlng = L.latLng(feature.geometry.coordinates[1],
+                              feature.geometry.coordinates[0]
+        );
+        map.flyTo(latlng, 17, {animate: false});
+        layer.bindPopup(feature.properties.name).openPopup();
+      }
+    });
+    placeLayer.addTo(map);
+  };
+</script>
+{% endblock %}

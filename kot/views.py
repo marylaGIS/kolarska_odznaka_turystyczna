@@ -21,6 +21,16 @@ class ListView(View):
         return render(request, 'list.html')
 
 
+class PlaceDetailsView(View):
+    def get(self, request, place_id):
+        place = Place.objects.get(pk=place_id)
+
+        ctx = {'place': place}
+
+        return render(request, 'place-details.html', ctx)
+
+
+
 class DatasetPlacesView(View):
     def get(self, request):
         places = serialize('geojson', Place.objects.all())

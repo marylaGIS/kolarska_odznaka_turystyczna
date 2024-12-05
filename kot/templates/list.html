@@ -25,6 +25,10 @@
     position: sticky;
     top: 0;
   }
+  a {
+    text-decoration: none;
+    color: black;
+  }
 </style>
 {% endblock %}
 
@@ -93,11 +97,17 @@
 
         td1.innerText = feature.id;
         td2.innerText = feature.properties.voivodeship;
-        td3.innerText = feature.properties.localization;
         td4.innerText = feature.properties.name;
         td5.innerText = feature.geometry.coordinates[1] + ' °N' + '\n' +
                         feature.geometry.coordinates[0] + ' °E';
 
+        var a = document.createElement('a');
+        a.setAttribute('href', '/obiekt/' + feature.id);
+        a.setAttribute('title', 'Szczegóły')
+        a.innerText = feature.properties.localization;
+        td3.appendChild(a);
+
+        td5.setAttribute('title', 'Przybliż na mapie')
         td5.onclick = function () {
           map.flyTo(latLng, 15);
 
