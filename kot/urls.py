@@ -1,7 +1,8 @@
 from django.urls import path
 
 from .views import IndexView, MapView, ListView, PlaceDetailsView, \
-    SignUpView, SignInView, LogoutView
+    SignUpView, SignInView, LogoutView, \
+    UserPlacesView
 
 from .views import DatasetPlacesView
 
@@ -14,6 +15,8 @@ urlpatterns = [
     path(r'zarejestruj', SignUpView.as_view(), name='register'),
     path(r'zaloguj', SignInView.as_view(), name='login'),
     path(r'wyloguj', LogoutView.as_view(), name='logout'),
+
+    path(r'profil/<int:tourist_id>/obiekty/', UserPlacesView.as_view(), name='user-places'),
 
     path(r'dataset-places/', DatasetPlacesView.as_view(), name='dataset-places'),
 ]

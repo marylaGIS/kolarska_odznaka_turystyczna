@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load leaflet_tags %}
+
+{% block title %}Odwiedzone miejsca{% endblock %}
+
+{% block imports %}
+  <script src="{% static 'plugins/leaflet.ajax.min.js' %}"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock %}
+
+{% block style %}
+<style>
+  #map {
+    height: 65vh;
+  }
+  a {
+    text-decoration: none;
+    color: black;
+  }
+  .zoomTo:hover {
+    cursor: pointer;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3 class="fw-bold text-body-emphasis">
+      Odwiedzone miejsca
+    </h3>
+</div>
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <table class="table table-striped table-hover" id="tbl-list">
+        <thead>
+          <tr>
+            <th class="bg-success text-white">ID</th>
+            <th class="bg-success text-white">nazwa</th>
+            <th class="bg-success text-white">miejscowość</th>
+            <th class="bg-success text-white">mapa</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for place in tourist_places %}
+          <tr>
+            <td>{{ place.id }}</td>
+            <td><a href="/obiekt/{{ place.id }}" title="Szczegóły">{{ place.name }}</a></td>
+            <td>{{ place.localization }}</td>
+            <td class="zoomTo">{{ place.geom.y }} °N<br>{{ place.geom.x }} °E</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      {% leaflet_map "map" callback="window.map_init" %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+  function stylePointsVisited () {
+    return {
+    radius: 6,
+    color: 'green',
+    weight: 3,
+    fillColor: 'white',
+    fillOpacity: 1
+    }
+  };
+
+  function stylePointsUnvisited () {
+    return {
+    radius: 5,
+    color: 'grey',
+    weight: 2,
+    fillColor: 'white',
+    fillOpacity: 0.8
+    }
+  };
+
+  function map_init (map, options) {
+
+    var placesVisitedLayer = L.geoJson.ajax("{% url 'dataset-places' %}", {
+    filter: function (feature) {
+        if ( {{ tourist_places_ids }}.includes(feature.id) )
+        return true
+    },
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup(feature.properties.name)
+    },
+    pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, stylePointsVisited(feature))
+    } 
+    });
+
+    var placesUnvisitedLayer = L.geoJson.ajax("{% url 'dataset-places' %}", {
+    filter: function (feature) {
+        if (! {{ tourist_places_ids }}.includes(feature.id) )
+        return true
+    },
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup(feature.properties.name)
+    },
+    pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, stylePointsUnvisited(feature))
+    } 
+    });
+
+    placesUnvisitedLayer.addTo(map);
+    placesVisitedLayer.addTo(map);
+    
+  };
+</script>
+{% endblock %}

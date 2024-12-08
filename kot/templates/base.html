@@ -45,11 +45,17 @@
             <button class="btn btn-outline-success" type="submit">Zarejestruj</button>
           </a>
           {% else %}
-          <div class="dropdown text-end me-5">
+          <div class="dropdown text-end">
             <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-person-circle h2"></i>
             </a>
-            <ul class="dropdown-menu text-small">
+            <ul class="dropdown-menu text-small dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="/profil/{{ user.id }}/obiekty/">
+                  Odwiedzone miejsca
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
               <li>
                 <a class="dropdown-item" href="{% url 'logout' %}">
                   Wyloguj

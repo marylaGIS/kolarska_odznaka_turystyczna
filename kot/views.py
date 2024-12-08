@@ -90,6 +90,19 @@ class PlaceDetailsView(View):
             return redirect(f'/obiekt/{place_id}')
 
 
+class UserPlacesView(View):
+    def get(self, request, tourist_id):
+        tourist = Tourist.objects.get(pk=tourist_id)
+        tourist_places = tourist.places.all()
+        tourist_places_ids = [place.id for place in tourist_places]
+
+        ctx = {'tourist': tourist,
+               'tourist_places': tourist_places,
+               'tourist_places_ids': tourist_places_ids}
+
+        return render(request, 'user-places.html', ctx)
+
+
 class SignUpView(View):
     def get(self, request):
         form = SignUpForm()
