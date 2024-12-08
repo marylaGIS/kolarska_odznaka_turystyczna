@@ -6,8 +6,8 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render, HttpResponse
 from django.views import View
 
-from .forms import SignUpForm
-from .models import Place, Tourist
+from .forms import SignUpForm, VisitPlaceForm, UnvisitPlaceForm
+from .models import Place, Tourist, TouristsPlaces
 
 
 class IndexView(View):
@@ -28,10 +28,66 @@ class ListView(View):
 class PlaceDetailsView(View):
     def get(self, request, place_id):
         place = Place.objects.get(pk=place_id)
+        tourist_id = request.user.id
 
-        ctx = {'place': place}
+        try:
+            visited_place = TouristsPlaces.objects.get(tourist_id=tourist_id,
+                                                       place_id=place_id)
+        except TouristsPlaces.DoesNotExist:
+            visited_place = None
+
+        if visited_place:
+            form = UnvisitPlaceForm(
+                initial={
+                    'tourist_id': tourist_id,
+                    'place_id': place_id
+                }
+            )
+            visited = True
+        else:
+            form = VisitPlaceForm(
+                initial={
+                    'tourist_id': tourist_id,
+                    'place_id': place_id
+                }
+            )
+            visited = False
+
+        ctx = {'place': place,
+               'form': form,
+               'visited_place': visited_place,
+               'visited': visited}
 
         return render(request, 'place-details.html', ctx)
+
+    def post(self, request, place_id):
+        form = VisitPlaceForm(request.POST)
+        if form.is_valid():
+            tourist_id = form.cleaned_data['tourist_id']
+            place_id = form.cleaned_data['place_id']
+            visit_date = form.cleaned_data['visit_date']
+
+            TouristsPlaces.objects.create(
+                tourist_id=tourist_id,
+                place_id=place_id,
+                visit_date=visit_date
+            )
+
+            return redirect(f'/obiekt/{place_id}')
+
+        form = UnvisitPlaceForm(request.POST)
+        if form.is_valid():
+            tourist_id = form.cleaned_data['tourist_id']
+            place_id = form.cleaned_data['place_id']
+
+            visited_place = TouristsPlaces.objects.get(
+                tourist_id = tourist_id,
+                place_id = place_id
+            )
+
+            visited_place.delete()
+
+            return redirect(f'/obiekt/{place_id}')
 
 
 class SignUpView(View):

@@ -39,6 +39,26 @@
           {{ place.link2 }}
         </a>
       </p>
+      <br>
+      {% if not visited and not user.is_anonymous %}
+      <P><b>Podaj datę zwiedzania obiektu i dodaj do listy zwiedzonych miejsc:</b></P>
+      <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">
+          Dodaj
+        </button>
+      </form>
+      {% elif visited and not user.is_anonymous %}
+      <p><b>Obiekt został zwiedzony {{visited_place.visit_date}} r.</b></p>
+      <form action="" method="post" onsubmit="return confirmDelete();">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-danger">
+          Usuń z odwiedzonych
+        </button>
+      </form>
+      {% endif %}
     </div>
     <div class="col">
       {% leaflet_map "map" callback="window.map_init" %}
@@ -78,5 +98,9 @@
     });
     placeLayer.addTo(map);
   };
+
+function confirmDelete() {
+  return confirm("Czy na pewno chcesz usunąć ten obiekt z odwiedzonych?")
+};
 </script>
 {% endblock %}
